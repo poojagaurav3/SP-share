@@ -1,0 +1,74 @@
+{{set . "title" "Limits"}}
+{{set . "headerTitle" "User Limits"}}
+{{template "header.html" .}}
+
+{{ if .userLimitsModel }}
+{{ set . "users" .userLimitsModel.Users }}
+{{ set . "maxCount" .userLimitsModel.MaxItemCount }}
+{{ set . "maxSpace" .userLimitsModel.MaxItemSpace }}
+{{ end }}
+
+<!-- Area Chart -->
+<div class="col-xl-12 col-lg-12">
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Select User</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+            <form action="/user/getlimits" method="POST">
+                <div class="form-group row">
+                    <label class="col-sm-1 col-form-label">User</label>
+                    <div class="col-sm-4">
+                        <select name="user" class="form-control">
+                            <option value="">Select</option>
+                            {{ range $i, $user := .users }}
+                            <option value="{{ $user.UserID }}">{{ printf "%s %s" $user.FirstName $user.LastName }}
+                            </option>
+                            {{ end }}
+                        </select>
+                    </div>
+                    <div class="col-sm-1">
+                        <input type="submit" class="btn btn-primary btn-user btn-block" value="Get limits" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{ if and .maxCount .maxSpace }}
+<div class="col-xl-12 col-lg-12">
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Update Limits</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+            <form action="/user/setlimits" method="POST">
+                <input type="hidden" name="user" value="{{ .userLimitsModel.UserID }}"/>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label">Maximum allowed file uploads</label>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control form-control-user" name="maxCount" value="{{ .maxCount }}">
+                    </div>
+                    <label class="col-md-2 col-form-label">Maximum allowed space</label>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control form-control-user" name="maxSpace" value="{{ .maxSpace }}">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="submit" class="btn btn-primary btn-user btn-block" value="Update" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{ end }}
+
+
+
+{{template "footer.html" .}}

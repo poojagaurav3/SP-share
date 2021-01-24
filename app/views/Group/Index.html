@@ -1,0 +1,84 @@
+{{set . "title" "Group"}}
+{{set . "headerTitle" "Group"}}
+{{template "header.html" .}}
+
+<!-- Area Chart -->
+<div class="col-xl-12 col-lg-12">
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Create Group</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+            <form action="/groups/create" method="POST">
+                <div class="form-group row">
+                    <label class="col-sm-1 col-form-label">Group Name</label>
+                    <div class="col-sm-4">
+                        <input type="input" class="form-control form-control-user" name="group"
+                            placeholder="Group name" />
+                    </div>
+                    <div class="col-sm-1">
+                        <input type="submit" class="btn btn-primary btn-user btn-block" value="Create" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Available Groups</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+            {{ if not .groups }}
+            <div class="alert alert-warning" role="alert">
+                No groups available!
+            </div>
+            {{ else }}
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Group Name</th>
+                            <th>Status</th>
+                            <th>Created By</th>
+                            <th>Creation Time</th>
+                            <th>Request for Group Lead access</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ range $i, $group := .groups }}
+                        <tr>
+                            <td>{{ increment $i }}</td>
+                            <td>
+                                <a href="/groups/{{ $group.GroupID }}">
+                                    {{ $group.GroupName }}
+                                </a>
+                            </td>
+                            <td>{{ wfstr $group.WorkflowStatus }}</td>
+                            <td>{{ printf "%s %s" $group.CreatedByFirstName $group.CreatedByLastName }}</td>
+                            <td>{{ datetime $group.CreationTime }}</td>
+                            <td>
+                                {{ if not $group.IsLeader }}
+                                <form action="/groupmap/upgrade" method="POST">
+                                    <input type="hidden" name="groupID" value="{{ $group.GroupID }}">
+                                    <input type="submit" class="btn btn-primary" value="Request">
+                                </form>
+                                {{end}}
+                            </td>
+                        </tr>
+                        {{ end }}
+
+                    </tbody>
+                </table>
+            </div>
+            {{ end }}
+        </div>
+    </div>
+</div>
+
+{{template "footer.html" .}}

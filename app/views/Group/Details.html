@@ -1,0 +1,118 @@
+{{ set . "title" "Group Details"}}
+{{set . "headerTitle" "User Groups"}}
+{{template "header.html" .}}
+
+
+<!-- Area Chart -->
+<div class="col-xl-12 col-lg-12">
+    {{ if not .group }}
+    <div class="alert alert-warning" role="alert">
+        Group details not available!
+    </div>
+    {{ else }}
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Group Details</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+            <div class="form-group row">
+                <label for="groupName" class="col-sm-2 col-form-label">Group Name</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext" id="groupName"
+                        value="{{ .group.GroupName }}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="groupName" class="col-sm-2 col-form-label">Created By</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext" id="createdBy"
+                        value='{{ printf "%s %s" .group.CreatedByFirstName .group.CreatedByLastName }}'>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="groupName" class="col-sm-2 col-form-label">Created On</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext" id="createdBy"
+                        value='{{ datetime .group.CreationTime }}'>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    {{ if .group.IsLeader }}
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Tag Users to Group</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+            <form action="/groupmap/create" method="POST">
+                <div class="form-group row">
+                    <label class="col-sm-1 col-form-label">Username</label>
+                    <div class="col-sm-4">
+                        <input type="input" class="form-control form-control-user" name="username"
+                            placeholder="Username" />
+                        <input type="hidden" value="{{ .group.GroupID }}" name="groupID">
+                    </div>
+                    <div class="col-sm-1">
+                        <input type="submit" class="btn btn-primary btn-user btn-block" value="Add user" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {{ end }}
+
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Group Members</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+            {{ if not .group.TaggedUsers }}
+            <div class="alert alert-warning" role="alert">
+                No user-mapping available!
+            </div>
+            {{ else }}
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Role in group</th>
+                            <th>Added By</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ range $i, $user := .group.TaggedUsers }}
+                        <tr>
+                            <td>{{ increment $i }}</td>
+                            <td>{{ printf "%s %s" $user.FirstName $user.LastName }}</td>
+                            <td>{{ $user.Username }}</td>
+                            <td>{{ if $user.IsLeader }}
+                                    Group Leader
+                                {{ else }}
+                                    Member
+                                {{ end}}
+                                 ({{ wfstr $user.WorkflowStatus }})
+                            </td>
+                            <td>{{ printf "%s %s" $user.CreatedByFirstName $user.CreatedByLastName }} ({{ datetime $user.CreationTime }})</td>
+                        </tr>
+                        {{ end }}
+                    </tbody>
+                </table>
+            </div>
+            {{ end }}
+        </div>
+    </div>
+    {{ end }}
+</div>
+
+{{template "footer.html" .}}

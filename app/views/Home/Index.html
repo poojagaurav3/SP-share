@@ -1,0 +1,114 @@
+{{set . "title" "Home"}}
+{{set . "headerTitle" "Home"}}
+{{template "header.html" .}}
+
+{{ if .homeItems }}
+{{ set . "images" .homeItems.Images }}
+{{ set . "videos" .homeItems.Videos }}
+{{ end }}
+
+
+<!-- Area Chart -->
+<div class="col-xl-12 col-lg-12">
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Photos</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+            <div class="row">
+                {{ if .images }}
+                <ul class="itemContainer">
+                    {{ range $i, $img := .images }}
+                    <li>
+                        <div class="previewImageContainer">
+                            <p><label>
+                                    {{ $img.ItemMeta.Description }}
+                                </label>
+                            </p>
+                            <img class="imgPreview" src="{{ $img.ItemMeta.ItemPath }}" alt="" width="500" height="400">
+                            <p class="text-center"> <label class="lblImageName">
+                                    <a href="/item/{{ $img.ItemMeta.ItemID }}">
+                                        {{ $img.ItemMeta.ItemName }}
+                                    </a>
+                                    |
+                                    <a href="/groups/{{ $img.GroupDetails.GroupID }}">
+                                        {{ $img.GroupDetails.GroupName }}
+                                    </a>
+                                </label>
+                            </p>
+                        </div>
+                    </li>
+                    {{ end }}
+                </ul>
+                {{ else }}
+                <div class="alert alert-warning" role="alert">
+                    No images uploaded yet!
+                </div>
+                {{ end }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pie Chart -->
+<div class="col-xl-12 col-lg-12">
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Videos</h6>
+        </div>
+        <!-- Card Body -->
+
+        <!-- Video capability reference - http://camendesign.com/code/video_for_everybody -->
+        <!-- http://camendesign.com/code/video_for_everybody/test_yt.html -->
+        <div class="card-body">
+            <div class="row">
+                {{ if .videos }}
+                <ul class="itemContainer">
+                    {{ range $i, $video := .videos }}
+                    <li>
+                        <div class="previewImageContainer">
+                            <p><label>
+                                    {{ $video.ItemMeta.Description }}
+                                </label>
+                            </p>
+                            <video width="500" height="400" controls>
+                                <source src="{{ $video.ItemMeta.ItemPath }}" type="video/mp4" />
+                                <object width="500" height="400" type="application/x-shockwave-flash"
+                                    data="http://www.youtube.com/v/YE7VzlLtp-4">
+                                    <param name="movie" value="http://www.youtube.com/v/YE7VzlLtp-4" />
+                                    <param name="flashvars"
+                                        value="controlbar=over&amp;image=__POSTER__.JPG&amp;file={{ $video.ItemMeta.ItemPath }}" />
+                                    <img src="/uploads/bird.jpg" width="500" height="400"
+                                        alt="{{ $video.ItemMeta.ItemName }}"
+                                        title="No video playback capabilities, please download the video" />
+                                </object>
+                            </video>
+                            <p class="text-center"> <label class="lblImageName">
+                                    <a href="/item/{{ $video.ItemMeta.ItemID }}">
+                                        {{ $video.ItemMeta.ItemName }}
+                                    </a>
+                                    |
+                                    <a href="/groups/{{ $video.GroupDetails.GroupID }}">
+                                        {{ $video.GroupDetails.GroupName }}
+                                    </a>
+                                </label>
+                            </p>
+                        </div>
+                    </li>
+                    {{ end }}
+                </ul>
+                {{ else }}
+                <div class="alert alert-warning" role="alert">
+                    No videos uploaded yet!
+                </div>
+                {{ end }}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{template "footer.html" .}}

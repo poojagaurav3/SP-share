@@ -1,0 +1,109 @@
+{{set . "title" "Preview"}}
+{{set . "headerTitle" "Preview"}}
+{{template "header.html" .}}
+
+{{ if .itemWithComments }}
+{{ set . "itemMeta" .itemWithComments.ItemMeta }}
+{{ set . "comments" .itemWithComments.Comments }}
+{{ end }}
+
+<!-- Area Chart -->
+<div class="col-xl-12 col-lg-12">
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Photos</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+            <div class="row justify-content-md-center">
+                {{ if .itemMeta }}
+                <div class="imagePreviewLarge">
+                    <p><label>
+                            {{ .itemMeta.Description }}
+                        </label>
+                    </p>
+                    <p class="text-center">
+                        {{ if isimg .itemMeta.ItemTypeID }}
+                        <img class="imgPreview" src="{{ .itemMeta.ItemPath }}" alt="" width="990" height="750">
+                        {{ else if isvideo .itemMeta.ItemTypeID }}
+                        <video width="990" height="750" controls>
+                            <source src="{{ .itemMeta.ItemPath }}" type="video/mp4" />
+                            <object width="990" height="750" type="application/x-shockwave-flash"
+                                data="http://www.youtube.com/v/YE7VzlLtp-4">
+                                <param name="movie" value="http://www.youtube.com/v/YE7VzlLtp-4" />
+                                <param name="flashvars"
+                                    value="controlbar=over&amp;image=__POSTER__.JPG&amp;file={{ .itemMeta.ItemPath }}" />
+                                <img src="/uploads/bird.jpg" width="990" height="750" alt="{{ .itemMeta.ItemName }}"
+                                    title="No video playback capabilities, please download the video" />
+                            </object>
+                        </video>
+
+                        {{ else }}
+                        <p>Preview not supported for the given item type</p>
+                        {{ end }}
+                    </p>
+
+                    <p class="text-center"> <label class="lblImageName">
+                            {{ .itemMeta.ItemName }} | <a href="/groups/{{ .itemMeta.GroupID }}">
+                                {{ .itemWithComments.GroupName }}
+                            </a>
+                        </label>
+                    </p>
+                    <p>
+                        <form action="/item/delete" method="POST">
+                            <strong><a download class="btn btn-link"
+                                    href="{{ .itemMeta.ItemPath }}">Download</a></strong> |
+                            <input type="hidden" name="itemID" value="{{ .itemMeta.ItemID }}">
+                            <strong><input type="submit" class="btn btn-link" value="Delete"></strong>
+                        </form>
+                        <label class="lblImageName">
+                            Uploaded by {{ printf "%s %s" .itemMeta.CreatedByFirstName .itemMeta.CreatedByLastName }} on
+                            {{ datetime .itemMeta.CreationTime }}
+                            </a>
+                        </label>
+                    </p>
+                </div>
+                {{ else }}
+                <div class="alert alert-warning" role="alert">
+                    Item details unavailable!
+                </div>
+                {{ end }}
+            </div>
+            <div class="row justify-content-md-center">
+                <div class="commentsDisplay">
+                    <form action="/item/comment" method="POST">
+                        <div class="commentsContainer">
+                            <div class="form-group row">
+                                <div class="col-md-10 col-lg-10 col-sm-10">
+                                    <textarea class="form-control" name="comment" rows="3"
+                                        placeholder="Add comment"></textarea>
+                                    <input type="hidden" name="itemID" value="{{ .itemMeta.ItemID }}">
+                                </div>
+                                <div class="col-md-2 col-lg-2 col-sm-2">
+                                    <input type="submit" class="btn btn-primary btn-user btn-block" value="Comment">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    {{ if .comments }}
+                    <ul class="commentsUL">
+                        {{ range $i, $comment := .comments }}
+                        <li>
+                            <div class="commentHolder">
+                                <p>{{datetime $comment.CreationTime}}</p>
+                                <span
+                                    class="font-weight-bold">{{ printf "%s %s" $comment.CreatedByFirstName $comment.CreatedByLastName }}</span>:
+                                {{ unescape $comment.Comment }}
+                            </div>
+                        </li>
+                        {{ end }}
+                    </ul>
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{template "footer.html" .}}

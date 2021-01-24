@@ -1,0 +1,55 @@
+{{set . "title" "Items"}}
+{{set . "headerTitle" "Items"}}
+{{template "header.html" .}}
+
+<!-- Area Chart -->
+<div class="col-xl-12 col-lg-12">
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Add Item</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+            {{ if not .groupsKeyVal }}
+            <div class="alert alert-warning" role="alert">
+                No groups available!
+            </div>
+            {{ else }}
+            <form enctype="multipart/form-data" action="/upload" method="POST">
+                <div class="form-group row">
+                    <label class="col-sm-1 col-form-label">Name</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" name="name" placeholder="Item name" />
+                    </div>
+                    <label class="col-sm-1 col-form-label">Description</label>
+                    <div class="col-sm-4">
+                        <textarea class="form-control" name="description" rows="3"
+                            placeholder="Item description"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-1 col-form-label">Group</label>
+                    <div class="col-sm-4">
+                        <select name="group" class="form-control">
+                            <option value="">Select</option>
+                            {{ range $i, $group := .groupsKeyVal }}
+                            <option value="{{ $group.GroupID }}">{{ $group.GroupName }}</option>
+                            {{ end }}
+                        </select>
+                    </div>
+                    <label class="col-sm-1 col-form-label">Upload</label>
+                    <div class="col-sm-4">
+                        <input type="file" class="form-control" name="uploadedFile" />
+                    </div>
+                    <div class="col-sm-1">
+                        <input type="submit" class="btn btn-primary btn-user btn-block" value="Upload" />
+                    </div>
+                </div>
+            </form>
+            {{ end }}
+        </div>
+    </div>
+</div>
+
+{{template "footer.html" .}}

@@ -1,0 +1,58 @@
+# Routes Config
+#
+# This file defines all application routes (Higher priority routes first)
+#
+
+module:testrunner
+# module:jobs
+
+
+GET     /                                       Account.Index
+GET     /login                                  Account.Index
+POST    /login                                  Account.Login
+GET     /register                               Account.Register
+GET     /unauthorized                           Account.Unauthorized
+POST    /add                                    Account.Add
+POST    /logout                                 Account.Logout
+GET     /home                                   Home.Index
+GET     /groups                                 Group.Index
+POST    /groups/create                          Group.Create
+POST    /groupmap/create                        Group.MapUser
+POST    /groupmap/upgrade                       Group.RequestLeadAccess
+GET     /groups/:id                             Group.Details
+GET     /requests/groups                        Requests.Groups
+POST    /requests/groups                        Requests.HandleGroup
+GET     /requests/users                         Requests.Users
+POST    /requests/users                         Requests.HandleUser
+GET     /requests/groupaccess                   Requests.GroupAccess
+POST    /requests/groupaccess                   Requests.HandleGroupAccess
+GET     /upload                                 Item.Upload
+POST    /upload                                 Item.UploadHandler
+GET     /item/:id                               Item.Preview
+POST    /item/comment                           Item.AddComment
+POST    /item/delete                            Item.Delete
+GET     /user/limits                            Limit.Users
+POST    /user/getlimits                         Limit.UserLimits
+POST    /user/setlimits                         Limit.UpdateUserLimits
+GET     /group/limits                           Limit.Groups
+POST    /group/getgrplimits                     Limit.GroupLimits
+POST    /group/setgrplimits                     Limit.UpdateGroupLimits
+GET     /items/limits                           Limit.ItemTypes
+POST    /items/setlimits                        Limit.UpdateItemLimits
+
+# Ignore favicon requests
+GET     /favicon.ico                            404
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/*filepath                       Static.Serve("public")
+GET     /uploads/*filepath                      Static.Serve("uploads")
+
+# Catch all, this will route any request into the controller path
+#
+#                    **** WARNING ****
+# Enabling this exposes any controller and function to the web.
+# ** This is a serious security issue if used online **
+#
+# For rapid development uncomment the following to add new controller.action endpoints
+# without having to add them to the routes table.
+# *       /:controller/:action                    :controller.:action

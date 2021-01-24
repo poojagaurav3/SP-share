@@ -1,0 +1,36 @@
+{{set . "title" "Limits"}}
+{{set . "headerTitle" "Group Limits"}}
+{{template "header.html" .}}
+
+
+<!-- Area Chart -->
+<div class="col-xl-12 col-lg-12">
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Select Group</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+            <form action="/group/getgrplimits" method="POST">
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label">Group</label>
+                    <div class="col-md-4">
+                        <select name="group" class="form-control">
+                            <option value="">Select</option>
+                            {{ range $i, $group := .groups }}
+                            <option value="{{ $group.GroupID }}">{{ printf "%s" $group.GroupName}}
+                            </option>
+                            {{ end }}
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <input type="submit" class="btn btn-primary btn-user btn-block" value="Get limits" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{template "footer.html" .}}

@@ -1,0 +1,57 @@
+.previewImageContainer {
+    width: 512px;
+    float:left;
+    height: inherit;
+    padding: 8px 5px;
+    border: 1px solid grey;
+    background-color: white;
+    box-shadow: 12px 0 15px -4px grey, -12px 0 8px -4px grey;
+}
+
+.itemContainer {
+    list-style-type:none
+}
+
+    .itemContainer li {
+        display: block;
+        padding: 2px;
+        float: left;
+        margin: 25px;
+    }
+
+.lblImageName {
+    font-family: monospace;
+    font-weight: 700;
+}
+
+.imagePreviewLarge {
+    width: 1000px;
+    height: inherit;
+    padding: 8px 5px;
+    border: 1px solid grey;
+    background-color: white;
+    box-shadow: 12px 0 15px -4px grey, -12px 0 8px -4px grey;
+}
+
+.commentsContainer {
+    width: 1000px;
+    margin-top: 20px;
+    height: inherit;
+    padding: 8px 5px;
+}
+
+.commentsUL {
+    padding: 0px;
+}
+.commentsUL > li {
+    display: block;
+    margin:0;
+}
+
+.commentHolder {
+    position: relative;
+    padding: 2px;
+    margin: 15px 0;
+    min-height: 50px;
+    border: 1px solid black;
+}

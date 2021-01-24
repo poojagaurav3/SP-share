@@ -1,0 +1,71 @@
+{{set . "title" "User Requests"}}
+{{set . "headerTitle" "User Requests"}}
+{{template "header.html" .}}
+
+<!-- Area Chart -->
+<div class="col-xl-12 col-lg-12">
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">New User Requests</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+            {{ if not .users }}
+            <div class="alert alert-warning" role="alert">
+                No pending requests!
+            </div>
+            {{ else }}
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Creation Time</th>
+                            <th>Approve</th>
+                            <th>Reject</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ range $i, $user := .users }}
+                        <tr>
+                            <td>{{ increment $i }}</td>
+                            <td>{{ printf "%s %s" $user.FirstName $user.LastName }}</td>
+                            <td>{{ $user.Username }}</td>
+                            <td>{{ if $user.IsAdmin }}
+                                    Administrator
+                                {{ else }}
+                                    Member
+                                {{ end }}
+                            </td>
+                            <td>{{ datetime $user.CreationTime }}</td>
+                            <td>
+                                <form action="/requests/users" method="POST">
+                                    <input type="hidden" name="memberID" value="{{ $user.UserID }}">
+                                    <input type="hidden" name="approve" value="true">
+                                    <input type="submit" value="Approve" class="btn btn-primary">
+                                </form>
+                            </td>
+                            <td>
+                                <form action="/requests/users" method="POST">
+                                    <input type="hidden" name="memberID" value="{{ $user.UserID }}">
+                                    <input type="hidden" name="approve" value="false">
+                                    <input type="submit" value="Reject" class="btn btn-primary">
+                                </form>
+                            </td>
+                        </tr>
+                        {{ end }}
+
+                    </tbody>
+                </table>
+                {{ end }}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{{template "footer.html" .}}

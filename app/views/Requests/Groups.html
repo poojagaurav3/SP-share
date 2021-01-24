@@ -1,0 +1,64 @@
+{{set . "title" "Group Requests"}}
+{{set . "headerTitle" "Group Requests"}}
+{{template "header.html" .}}
+
+<!-- Area Chart -->
+<div class="col-xl-12 col-lg-12">
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">New Group Requests</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+            {{ if not .groups }}
+            <div class="alert alert-warning" role="alert">
+                No pending requests!
+            </div>
+            {{ else }}
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Group Name</th>
+                            <th>Status</th>
+                            <th>Creation Time</th>
+                            <th>Approve</th>
+                            <th>Reject</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ range $i, $group := .groups }}
+                        <tr>
+                            <td>{{ increment $i }}</td>
+                            <td>{{ $group.GroupName }}</td>
+                            <td>{{ wfstr $group.WorkflowStatus }}</td>
+                            <td>{{ datetime $group.CreationTime }}</td>
+                            <td>
+                                <form action="/requests/groups" method="POST">
+                                    <input type="hidden" name="groupID" value="{{ $group.GroupID }}">
+                                    <input type="hidden" name="approve" value="true">
+                                    <input type="submit" value="Approve" class="btn btn-primary">
+                                </form>
+                            </td>
+                            <td>
+                                <form action="/requests/groups" method="POST">
+                                    <input type="hidden" name="groupID" value="{{ $group.GroupID }}">
+                                    <input type="hidden" name="approve" value="false">
+                                    <input type="submit" value="Reject" class="btn btn-primary">
+                                </form>
+                            </td>
+                        </tr>
+                        {{ end }}
+
+                    </tbody>
+                </table>
+                {{ end }}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{{template "footer.html" .}}
